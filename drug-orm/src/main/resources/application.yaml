@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/drug_db?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: root
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+  mvc:
+    static-path-pattern: /static/**
+  mail:
+    host: smtp.qq.com
+    username: 2477151098@qq.com
+    password: dhcrsktmiroxebai
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        debug: true
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:com/guan/mapper/xml/*.xml

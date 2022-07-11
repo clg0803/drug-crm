@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Login</title>
+		<link rel="stylesheet" href="../static/css/login.css">
+	</head>
+
+	<body>
+		<div class="login_box">
+			<h1 class="title">登录</h1>
+			<input name="username" class="input_box" type="text" placeholder="用户名">
+			<input name="password" class="input_box" type="password" placeholder="密码">
+			<select name="ident" class="input_box">
+				<option>管理员(默认)</option>
+				<option>中医</option>
+				<option>西医</option>
+			</select>
+
+			<!-- <button onclick="window.location.href='../routeEdit/index.html'" type="button" id="add">新增</button> -->
+
+			<input class="login_button_box" type="button" onclick="doLogin()" value="登录">
+			<input class="button_box" type="button" onclick="window.location.href='./register.html'" value="去注册">
+		</div>
+	</body>
+
+	<script src="../static/js/jquery.js"></script>
+
+	<script>
+		function doLogin() {
+			const username = $('input[name="username"]').val();
+			const password = $('input[name="password"]').val();
+			const ident = $('select[name="ident"]').val();
+			// VERTIFY chinses character
+			if ((/.*[\u4e00-\u9fa5]+.*$/).test(username) || (/.*[\u4e00-\u9fa5]+.*$/).test(password) ||
+				username.length > 20 || username.length == 0 || password.length > 10 || password.length == 0) {
+				alert("登录信息有误 请重新输入或者是注册")
+				return false;
+			}
+
+			let identCode = 3;
+			if (ident == "中医") {
+				identCode = 2;
+			} else if (ident == "西医") {
+				identCode = 1;
+			}
+
+			// send request
+			login(username, password, identCode);
+		}
+
+		function login(name, password, identCode) {
+			console.log(name);
+			console.log(password);
+			$.ajax({
+				url: 'http://localhost:8080/api/hr/login/', //提价的路径
+				type: "get", //提交方式
+				data: {
+					//向后台提交的数据
+					username: name,
+					password: password,
+					ident: identCode
+				},
+				dataType: "text", //规定请求成功后返回的数据
+				success: function(data) {
+					//请求成功之后进入该方法，data为成功后返回的数据
+					console.log(data);
+					const err = JSON.parse(data)
+					if (err.type == 'non error') {
+						// 跳转
+						alert("登录成功 !!! ");
+						location.replace("./homepage.html");
+					} else {
+						// fail to LOGIN
+						alert("登陆失败 请重新输入或者是注册")
+					}
+				},
+				error: function(errorMsg) {
+					//请求失败之后进入该方法，errorMsg为失败后返回的错误信息
+					alert("请求失败 !!! 出错了 !!!")
+				}
+			});
+			return false;
+		}
+	</script>
+
+</html>
