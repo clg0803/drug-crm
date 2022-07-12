@@ -98,7 +98,7 @@ CREATE TABLE `t_ip_info` (
 
 LOCK TABLES `t_ip_info` WRITE;
 /*!40000 ALTER TABLE `t_ip_info` DISABLE KEYS */;
-INSERT INTO `t_ip_info` VALUES (-27566079,'0:0:0:0:0:0:0:1',3);
+INSERT INTO `t_ip_info` VALUES (-27566079,'0:0:0:0:0:0:0:1',2);
 /*!40000 ALTER TABLE `t_ip_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,13 +110,13 @@ DROP TABLE IF EXISTS `t_recipe`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `t_recipe` (
-  `recipe_id` int NOT NULL AUTO_INCREMENT,
+  `recipe_id` bigint NOT NULL AUTO_INCREMENT,
   `doc_name` varchar(20) NOT NULL,
-  `create_time` time NOT NULL,
+  `create_time` timestamp NOT NULL,
+  `detail` json NOT NULL,
   PRIMARY KEY (`recipe_id`),
-  UNIQUE KEY `doc_name` (`doc_name`),
-  CONSTRAINT `t_recipe_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `t_recipe_detail` (`recipe_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `doc_name` (`doc_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,30 +125,8 @@ CREATE TABLE `t_recipe` (
 
 LOCK TABLES `t_recipe` WRITE;
 /*!40000 ALTER TABLE `t_recipe` DISABLE KEYS */;
+INSERT INTO `t_recipe` VALUES (1002,'xiyi','2022-07-11 09:06:33','{\"布洛芬\": 2, \"克林霉素\": 3}'),(1003,'zhongyi','2022-07-12 01:44:49','{\"人参\": 3, \"陈皮\": 3, \"炉甘石洗剂\": 3}');
 /*!40000 ALTER TABLE `t_recipe` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `t_recipe_detail`
---
-
-DROP TABLE IF EXISTS `t_recipe_detail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_recipe_detail` (
-  `recipe_id` int NOT NULL AUTO_INCREMENT,
-  `detail` json DEFAULT NULL,
-  PRIMARY KEY (`recipe_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_recipe_detail`
---
-
-LOCK TABLES `t_recipe_detail` WRITE;
-/*!40000 ALTER TABLE `t_recipe_detail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_recipe_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -186,4 +164,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-11 11:10:50
+-- Dump completed on 2022-07-12 10:57:09
