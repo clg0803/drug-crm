@@ -3,6 +3,10 @@
     <el-container style="height: 700px; border: 1px solid #eee">
 
       <el-container>
+        <el-header style="text-align: center; font-size: 30px">
+          <span> 药品详情界面 </span>
+        </el-header>
+
         <el-header style="text-align: right; font-size: 12px">
           <el-input
               v-model="searchValue" size="mini" clearable
@@ -12,25 +16,26 @@
         </el-header>
 
         <el-main>
-          <el-button type="success" size="small" @click="add">增加</el-button>
-          <el-table :data="tableData.slice((currentPage-1)*pageSize, currentPage*pageSize)">
+          <el-button type="success" size="small" icon="el-icon-upload" @click="add">增加</el-button>
+          <el-button type="warning" size="small" icon="el-icon-upload2" @click="exportExcel">导出数据表</el-button>
+          <el-table :data="tableData.slice((currentPage-1)*pageSize, currentPage*pageSize)" id="exportTable">
             <el-table-column prop="drugID" label="药品ID" width="100" align="center">
             </el-table-column>
             <el-table-column prop="drugName" label="药品名字" width="200" align="center">
             </el-table-column>
             <el-table-column prop="description" label="药品描述" width="300" style="text-align: center" align="center">
             </el-table-column>
-            <el-table-column prop="drugClass" label="药品类型" width="100" align="center">
+            <el-table-column prop="drugClass" label="药品类型" width="50" align="center">
             </el-table-column>
             <el-table-column prop="inventory" label="药品库存" width="100" align="center">
             </el-table-column>
             <el-table-column prop="unit" label="药品单位" width="100" align="center">
             </el-table-column>
 
-            <el-table-column label="ops" align="center">
+            <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="remove(scope.$index, scope.row)">删除</el-button>
+                <el-button size="mini" type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                <el-button size="mini" type="danger" icon="el-icon-remove" @click="remove(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -99,6 +104,8 @@
 
 <script>
 import axios from 'axios';
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 
 export default {
   data() {
@@ -109,6 +116,7 @@ export default {
       dialogTitle: '增加',
       iconFormVisible: false,
       tableData: [],
+      exportList: [],
       searchValue: "",
       docType: "",
       centerDialogVisible: false
@@ -282,7 +290,31 @@ export default {
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       console.log(this.currentPage)
-    }
+    },
+    // 表格数据写入excel，并导出为Excel文件
+    exportExcel(){
+      const XLSX = require('xlsx')
+      console.log('XLSX',XLSX,FileSaver)
+      // 使用 this.$nextTick 是在dom元素都渲染完成之后再执行
+      this.$nextTick(function () {
+        // 设置导出的内容是否只做解析，不进行格式转换     false：要解析， true:不解析
+        const xlsxParam = { raw: true }
+        const wb = XLSX.utils.table_to_book(document.querySelector('#exportTable'), xlsxParam)
+        // 导出excel文件名
+        let fileName = '药品清单' + new Date().toLocaleDateString() + '.xlsx'
+
+        const wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+        try {
+          // 下载保存文件
+          FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), fileName)
+        } catch (e) {
+          if (typeof console !== 'undefined') {
+            console.log(e, wbout)
+          }
+        }
+        return wbout
+      })
+    },
   },
   mounted() {
     // 填充数据

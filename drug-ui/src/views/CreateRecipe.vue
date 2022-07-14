@@ -3,17 +3,21 @@
     <el-container style="height: 700px; border: 1px solid #eee">
 
       <el-container>
+        <el-header style="text-align: center; font-size: 30px">
+          <span> 开处方界面 </span>
+        </el-header>
+
         <el-header style="text-align: right; font-size: 12px">
           <el-input
               v-model="searchValue" size="mini" clearable
               placeholder="请输入药品名称查询" style="width:200px"></el-input>
           <el-button type="primary" size="mini" @click="doFilter">查询</el-button>
-          <span> username 在这里显示</span>
+          <span> {{ docType }} </span>
         </el-header>
 
         <el-main>
-          <h1> This is CreateRecipe </h1>
-          <el-button type="success" size="small" @click="add">增加</el-button>
+          <el-button type="success" size="normal" icon="el-icon-upload" @click="uploadItems">查看完备处方并提交</el-button>
+          <el-button type="warning" size="small" icon="el-icon-delete" @click="resetAll">清空处方</el-button>
           <el-table :data="tableData.slice((currentPage-1)*pageSize, currentPage*pageSize)">
             <el-table-column prop="drugID" label="药品ID" width="100" align="center">
             </el-table-column>
@@ -28,12 +32,15 @@
             <el-table-column prop="unit" label="药品单位" width="100" align="center">
             </el-table-column>
 
-            <el-table-column label="ops" align="center">
+            <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="remove(scope.$index, scope.row)">删除</el-button>
+                <el-button size="mini" type="primary" icon="el-icon-mouse" @click="addToItems(scope.row, scope.$index)"
+                           :disabled="getOptional(scope.$index)">
+                  加入处方中
+                </el-button>
               </template>
             </el-table-column>
+
           </el-table>
 
           <el-pagination
@@ -50,116 +57,198 @@
 
         </el-main>
 
-
       </el-container>
-
 
     </el-container>
 
-    <el-dialog :title="dialogTitle" width="50%" :visible.sync="iconFormVisible">
-      <el-form :inline="false" :model="userInfo" class="demo-form-inline">
-        <el-form-item label="药品名">
-          <el-input v-model="userInfo.drugName" ></el-input>
-        </el-form-item>
-        <el-form-item label="药效描述">
-          <el-input v-model="userInfo.description"></el-input>
-        </el-form-item>
-        <el-form-item label="药品类型">
-          <el-input v-model="userInfo.drugClass" placeholder="3-通用 2-中药 1-西药"></el-input>
-        </el-form-item>
-        <el-form-item label="库存">
-          <el-input v-model="userInfo.inventory"></el-input>
-        </el-form-item>
-        <el-form-item label="单位">
-          <el-input v-model="userInfo.unit"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="iconFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitUser()">确 定</el-button>
+    <el-dialog
+        title="处方清单"
+        :visible.sync="dialogVisible"
+        width="30%"
+    >
+      <div>
+        <table style="margin: auto;">
+          <tr>
+            <td>药品名称</td>
+            <td> 用量</td>
+          </tr>
+          <tr v-for="(k, v) in this.items">
+            <td>{{ k[0] }}</td>
+            <td>{{ k[1] }}</td>
+          </tr>
+        </table>
       </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false"> 取消 </el-button>
+    <el-button type="primary" @click="submitItems()"> 确定提交 </el-button>
+  </span>
     </el-dialog>
 
   </div>
 </template>
 
 <style>
-.el-header {
-  background-color: #B3C0D1;
-  color: #333;
-  line-height: 60px;
-}
+  table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-.el-aside {
-  color: #333;
-}
+  table td, table th {
+    border: 1px solid #cad9ea;
+    color: #666;
+    height: 30px;
+  }
+
+  table thead th {
+    background-color: #CCE8EB;
+    width: 100px;
+  }
+
+  table tr:nth-child(odd) {
+    background: #fff;
+  }
+
+  table tr:nth-child(even) {
+    background: #F5FAFA;
+  }
 </style>
 
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
       currentPage: 1,
       pageSize: 5,
-      userInfo: {},
-      dialogTitle: '增加',
-      iconFormVisible: false,
-      rowIndex: null,
       tableData: [],
       searchValue: "",
+      docType: "",
+      items: new Map(),
+      optional: 0,
+      dialogVisible: false,
     }
   },
   methods: {
     doFilter() {
       console.log("into doFilter() method ... ")
+      console.log(this.searchValue)
       // TODO
+      let searchData = [];
       this.tableData.filter((item) => {
-        // if (item.drugName.indexOf(this.searchValue) > -1) {
-        //   this.searchData.push(item)
-        // }
+        if (item.drugName.search(this.searchValue) != -1) {
+          searchData.push(item)
+        }
       })
-      // this.tableData = this.searchData
+      console.log(searchData);
+      this.tableData = searchData;
     },
-    // 增加
-    add() {
-      this.dialogTitle = '增加';
-      this.userInfo = {};
-      this.iconFormVisible = true;
-    },
-    // 编辑
-    handleEdit(index, row) {
-      this.dialogTitle = '编辑';
-      this.userInfo = row;
-      this.iconFormVisible = true;
-      this.rowIndex = index;
-    },
-    // 删除
-    remove(index, row) {
-      // TODO
-      this.$confirm(`确定删除${row.drugName}吗?`, '提示', {
+    addToItems(row, index) {
+      console.log(row.drugName)
+      this.$prompt(`请输入 ${row.drugName} 的用量`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'error',
-      }).then(() => {
-        this.tableData.splice(index, 1);
+        type: 'warning',
+      }).then(({value}) => {
+        value = parseInt(value);
+        console.log(value)
+
+        if (!value || value <= 0 || value > row.inventory) {
+          this.$message({
+            type: 'error',
+            message: '输入的数据范围有误'
+          });
+          return false;
+        } else {
+          this.handleDisableButton(index);
+          this.items.set(row.drugName, value);
+          console.log(this.items);
+        }
+
+        this.$message({
+          type: 'success',
+          message: '加入成功'
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消加入'
+        });
       });
     },
-    submitUser() {
-      if (this.dialogTitle == '编辑') {
-        // this.tableData.splice(this.rowIndex, 1, this.userInfo);
-        // TODO
-        console.log(this.userInfo.drugID + " -- name : " + this.userInfo.drugName);
-      } else if (this.dialogTitle == '增加') {
-
-      }
-      this.iconFormVisible = false;
-
-      location.reload();
-      return;
+    // handle disable buttons
+    handleDisableButton(index) {
+      const idx = (this.currentPage - 1) * this.pageSize + index;
+      console.log("disable button indexed AT : " + idx);
+      this.optional |= 1 << (idx);
     },
-    handleSizeChange: function(size) {
+    getOptional(index) {
+      const idx = (this.currentPage - 1) * this.pageSize + index;
+      return !!(this.optional >> idx & 1 !== 0);
+    },
+    resetAll() {
+      console.log("resetAll() ...")
+      this.optional = 0;
+      this.items.clear();
+    },
+    uploadItems() {
+      console.log("uploadItems() ... ");
+      console.log(this.items);
+      this.dialogVisible = true;
+    },
+    submitItems() {
+      this.dialogVisible = false;
+      let that = this;
+      console.log(this.items);
+
+      // 按照类型填充数据
+      /**
+       * {
+       *     "人参": 3,
+       *     "陈皮": 888,
+       *     "炉甘石洗剂": 999
+       * }
+       */
+
+      let recipeItems = {};
+      for(let [k,v] of this.items.entries()){
+        recipeItems[k] = v;
+      }
+      console.log(recipeItems);
+      // submit
+      axios.post('http://localhost:8080/api/recipe/add/',
+          recipeItems
+      ).then(function (response) {
+        console.log(response);
+        if (response.data === true) {
+          that.$confirm("创建处方成功", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: 'success',
+          }).then(() => {
+            location.reload();
+          });
+        } else {
+          that.$confirm("创建失败 请联系管理员", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: 'warning',
+          }).then(() => {
+            location.reload();
+          });
+        }
+      }).catch(function (error) {
+        console.log(error);
+        that.$confirm("发生未知错误", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: 'error',
+        }).then(() => {
+          location.reload();
+        });
+      })
+      this.items.clear();
+    },
+    handleSizeChange(size) {
       this.pageSize = size
       console.log(this.pagesize)
     },
@@ -172,10 +261,22 @@ export default {
     // 填充数据
     this.$axios.get("http://localhost:8080/api/drug/home/all/")
         .then(response => {
-          if(response.data.code === 0){
+          if (response.data.code === 0) {
             console.log(response.data.data);
             this.tableData = [];
             this.tableData = response.data.data;
+            let ident = response.data.docType;
+            switch (ident) {
+              case 1:
+                this.docType = '西医';
+                break;
+              case 2:
+                this.docType = '中医';
+                break;
+              case 3:
+                this.docType = '管理员';
+                break;
+            }
           }
         })
         .catch(error => {
