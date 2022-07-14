@@ -40,7 +40,7 @@ CREATE TABLE `t_drug` (
 
 LOCK TABLES `t_drug` WRITE;
 /*!40000 ALTER TABLE `t_drug` DISABLE KEYS */;
-INSERT INTO `t_drug` VALUES (7001,'黄芩','清热燥湿','克',_binary '',1000),(7002,'陈皮','理气','克',_binary '',2000),(7003,'人参','补气','克',_binary '',2000),(7004,'土茯苓','清热解毒','克',_binary '',2000),(8001,'蒙脱石散','腹泻用药','盒',_binary '',100),(8002,'炉甘石洗剂','皮肤瘙痒','瓶',_binary '',100),(8003,'布洛芬','缓解疼痛','盒',_binary '',100),(8004,'盐酸氨溴索','镇咳祛痰','瓶',_binary '',100),(9001,'克林霉素','厌氧菌引起的腹腔和妇科感染','盒',_binary '',100),(9002,'阿莫西林','敏感菌所致的呼吸道、尿路和胆道感染以及伤寒等','盒',_binary '',100),(9003,'阿奇霉素','呼吸道 皮肤软组织感染','盒',_binary '',100),(9004,'盐酸倍他司汀','血管性头痛 脑动脉硬化','盒',_binary '',100);
+INSERT INTO `t_drug` VALUES (7001,'黄芩','清热燥湿','克',_binary '',2000),(7002,'陈皮','理气','克',_binary '',901),(7003,'人参','补气','克',_binary '',2000),(7004,'土茯苓','清热解毒','克',_binary '',2000),(8001,'蒙脱石散','腹泻用药','盒',_binary '',100),(8002,'炉甘石洗剂','皮肤瘙痒','瓶',_binary '',1000),(8003,'布洛芬','缓解疼痛','盒',_binary '',100),(8004,'盐酸氨溴索','镇咳祛痰','瓶',_binary '',100),(9001,'克林霉素','厌氧菌引起的腹腔和妇科感染','盒',_binary '',100),(9002,'阿莫西林','敏感菌所致的呼吸道、尿路和胆道感染以及伤寒等','盒',_binary '',100),(9003,'阿奇霉素','呼吸道 皮肤软组织感染','盒',_binary '',100),(9004,'盐酸倍他司汀','血管性头痛 脑动脉硬化','盒',_binary '',100);
 /*!40000 ALTER TABLE `t_drug` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,9 +114,8 @@ CREATE TABLE `t_recipe` (
   `doc_name` varchar(20) NOT NULL,
   `create_time` timestamp NOT NULL,
   `detail` json NOT NULL,
-  PRIMARY KEY (`recipe_id`),
-  UNIQUE KEY `doc_name` (`doc_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`recipe_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1009 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +124,7 @@ CREATE TABLE `t_recipe` (
 
 LOCK TABLES `t_recipe` WRITE;
 /*!40000 ALTER TABLE `t_recipe` DISABLE KEYS */;
-INSERT INTO `t_recipe` VALUES (1002,'xiyi','2022-07-11 09:06:33','{\"布洛芬\": 2, \"克林霉素\": 3}'),(1003,'zhongyi','2022-07-12 01:44:49','{\"人参\": 3, \"陈皮\": 3, \"炉甘石洗剂\": 3}');
+INSERT INTO `t_recipe` VALUES (1002,'xiyi','2022-07-11 09:06:33','{\"布洛芬\": 2, \"克林霉素\": 3}'),(1003,'zhongyi','2022-07-12 01:44:49','{\"人参\": 3, \"陈皮\": 3, \"炉甘石洗剂\": 3}'),(1004,'gcl','2022-07-12 07:01:00','{\"人参\": 100, \"黄芩\": 100}'),(1005,'admin','2022-07-12 07:05:43','{\"人参\": 3, \"陈皮\": 888, \"炉甘石洗剂\": 999}'),(1008,'admin','2022-07-13 10:34:00','{\"陈皮\": 99, \"黄芩\": 66}');
 /*!40000 ALTER TABLE `t_recipe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-12 10:57:09
+-- Dump completed on 2022-07-14  9:14:16
