@@ -29,6 +29,7 @@ CREATE TABLE `t_drug` (
   `unit` varchar(5) NOT NULL,
   `class` bit(2) NOT NULL,
   `inventory` int NOT NULL DEFAULT '0',
+  `version` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`drug_id`),
   KEY `idx_class_drugname` (`class`,`drug_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -40,7 +41,7 @@ CREATE TABLE `t_drug` (
 
 LOCK TABLES `t_drug` WRITE;
 /*!40000 ALTER TABLE `t_drug` DISABLE KEYS */;
-INSERT INTO `t_drug` VALUES (7001,'黄芩','清热燥湿','克',_binary '',2000),(7002,'陈皮','理气','克',_binary '',901),(7003,'人参','补气','克',_binary '',2000),(7004,'土茯苓','清热解毒','克',_binary '',2000),(8001,'蒙脱石散','腹泻用药','盒',_binary '',100),(8002,'炉甘石洗剂','皮肤瘙痒','瓶',_binary '',1000),(8003,'布洛芬','缓解疼痛','盒',_binary '',100),(8004,'盐酸氨溴索','镇咳祛痰','瓶',_binary '',100),(9001,'克林霉素','厌氧菌引起的腹腔和妇科感染','盒',_binary '',100),(9002,'阿莫西林','敏感菌所致的呼吸道、尿路和胆道感染以及伤寒等','盒',_binary '',100),(9003,'阿奇霉素','呼吸道 皮肤软组织感染','盒',_binary '',100),(9004,'盐酸倍他司汀','血管性头痛 脑动脉硬化','盒',_binary '',100);
+INSERT INTO `t_drug` VALUES (7001,'黄芩','清热燥湿','克',_binary '',1900,1),(7002,'陈皮','理气','克',_binary '',900,1),(7003,'人参','补气','克',_binary '',2000,0),(7004,'土茯苓','清热解毒','克',_binary '',2000,0),(7005,'甘草','调和 清热 祛痰止咳','克',_binary '',1000,2),(8001,'蒙脱石散','腹泻用药','盒',_binary '',100,0),(8002,'炉甘石洗剂','皮肤瘙痒','瓶',_binary '',1000,0),(8003,'布洛芬','缓解疼痛','盒',_binary '',90,0),(8004,'盐酸氨溴索','镇咳祛痰','瓶',_binary '',100,0),(9001,'克林霉素','厌氧菌引起的腹腔和妇科感染','盒',_binary '',100,0),(9002,'阿莫西林','敏感菌所致的呼吸道、尿路和胆道感染以及伤寒等','盒',_binary '',100,0),(9003,'阿奇霉素','呼吸道 皮肤软组织感染','盒',_binary '',100,0),(9004,'盐酸倍他司汀','血管性头痛 脑动脉硬化','盒',_binary '',100,0);
 /*!40000 ALTER TABLE `t_drug` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +62,7 @@ CREATE TABLE `t_hr` (
   KEY `ident` (`ident`),
   CONSTRAINT `t_hr_ibfk_1` FOREIGN KEY (`username`) REFERENCES `t_verify_code` (`username`),
   CONSTRAINT `t_hr_ibfk_2` FOREIGN KEY (`ident`) REFERENCES `t_drug` (`class`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +71,7 @@ CREATE TABLE `t_hr` (
 
 LOCK TABLES `t_hr` WRITE;
 /*!40000 ALTER TABLE `t_hr` DISABLE KEYS */;
-INSERT INTO `t_hr` VALUES (2,'admin','123456',_binary ''),(3,'xiyi','112233',_binary ''),(4,'zhongyi','332211',_binary ''),(5,'gcl','nmmdw',_binary '');
+INSERT INTO `t_hr` VALUES (2,'admin','123456',_binary ''),(3,'xiyi','112233',_binary ''),(4,'zhongyi','332211',_binary ''),(7,'gcl','nmmdw',_binary '');
 /*!40000 ALTER TABLE `t_hr` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +99,7 @@ CREATE TABLE `t_ip_info` (
 
 LOCK TABLES `t_ip_info` WRITE;
 /*!40000 ALTER TABLE `t_ip_info` DISABLE KEYS */;
-INSERT INTO `t_ip_info` VALUES (-27566079,'0:0:0:0:0:0:0:1',2);
+INSERT INTO `t_ip_info` VALUES (-27566079,'0:0:0:0:0:0:0:1',7);
 /*!40000 ALTER TABLE `t_ip_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,7 +116,7 @@ CREATE TABLE `t_recipe` (
   `create_time` timestamp NOT NULL,
   `detail` json NOT NULL,
   PRIMARY KEY (`recipe_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1009 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1011 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +125,7 @@ CREATE TABLE `t_recipe` (
 
 LOCK TABLES `t_recipe` WRITE;
 /*!40000 ALTER TABLE `t_recipe` DISABLE KEYS */;
-INSERT INTO `t_recipe` VALUES (1002,'xiyi','2022-07-11 09:06:33','{\"布洛芬\": 2, \"克林霉素\": 3}'),(1003,'zhongyi','2022-07-12 01:44:49','{\"人参\": 3, \"陈皮\": 3, \"炉甘石洗剂\": 3}'),(1004,'gcl','2022-07-12 07:01:00','{\"人参\": 100, \"黄芩\": 100}'),(1005,'admin','2022-07-12 07:05:43','{\"人参\": 3, \"陈皮\": 888, \"炉甘石洗剂\": 999}'),(1008,'admin','2022-07-13 10:34:00','{\"陈皮\": 99, \"黄芩\": 66}');
+INSERT INTO `t_recipe` VALUES (1002,'xiyi','2022-07-11 09:06:33','{\"布洛芬\": 2, \"克林霉素\": 3}'),(1003,'zhongyi','2022-07-12 01:44:49','{\"人参\": 3, \"陈皮\": 3, \"炉甘石洗剂\": 3}'),(1004,'gcl','2022-07-12 07:01:00','{\"人参\": 100, \"黄芩\": 100}'),(1005,'admin','2022-07-12 07:05:43','{\"人参\": 3, \"陈皮\": 888, \"炉甘石洗剂\": 999}'),(1008,'admin','2022-07-13 10:34:00','{\"陈皮\": 99, \"黄芩\": 66}'),(1009,'admin','2022-07-14 01:27:01','{\"甘草\": 100, \"布洛芬\": 10}'),(1010,'gcl','2022-07-14 02:48:14','{\"陈皮\": 100, \"黄芩\": 100}');
 /*!40000 ALTER TABLE `t_recipe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +151,7 @@ CREATE TABLE `t_verify_code` (
 
 LOCK TABLES `t_verify_code` WRITE;
 /*!40000 ALTER TABLE `t_verify_code` DISABLE KEYS */;
-INSERT INTO `t_verify_code` VALUES (2,'admin',100022),(3,'xiyi',111222),(4,'zhongyi',123321),(660238343,'gcl',770094);
+INSERT INTO `t_verify_code` VALUES (2,'admin',100022),(3,'xiyi',111222),(4,'zhongyi',123321),(660238343,'gcl',675454);
 /*!40000 ALTER TABLE `t_verify_code` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -163,4 +164,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-14  9:14:16
+-- Dump completed on 2022-07-14 10:50:53

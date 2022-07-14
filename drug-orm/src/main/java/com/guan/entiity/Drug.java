@@ -3,6 +3,7 @@ package com.guan.entiity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,9 @@ public class Drug {
     private Integer drugClass;
 
     private Integer inventory;
+
+    // 乐观锁版本
+    @Version
+    private Integer version;
 
 }

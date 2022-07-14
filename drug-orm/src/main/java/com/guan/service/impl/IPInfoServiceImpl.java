@@ -5,12 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guan.entiity.HR;
 import com.guan.entiity.IPInfo;
-import com.guan.entiity.ValidateInfo;
 import com.guan.mapper.HRMapper;
 import com.guan.mapper.IPInfoMapper;
-import com.guan.mapper.ValidateInfoMapper;
 import com.guan.service.IPInfoService;
-import com.guan.service.ValidInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
