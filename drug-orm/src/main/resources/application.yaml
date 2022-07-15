@@ -12,8 +12,8 @@ spring:
     static-path-pattern: /static/**
   mail:
     host: smtp.qq.com
-    username: 2477151098@qq.com
-    password: dhcrsktmiroxebai
+    username: ********
+    password: ********
     default-encoding: UTF-8
     port: 465
     properties:
