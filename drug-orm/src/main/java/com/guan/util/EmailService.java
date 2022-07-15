@@ -13,7 +13,8 @@ public class EmailService {
     public void sendCode(String emailAddress, Integer validCode) {
         //简单邮件
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("2477151098@qq.com");
+        // config your own e-mail address
+        simpleMailMessage.setFrom("********");
         simpleMailMessage.setTo(emailAddress);
         simpleMailMessage.setSubject("欢迎注册");
         simpleMailMessage.setText("Your valid code is : " + validCode);
