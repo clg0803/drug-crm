@@ -199,7 +199,17 @@ export default {
       this.dialogVisible = false;
       let that = this;
       console.log(this.items);
-
+      if (this.items.size === 0) {
+        that.$confirm("处方内容不能为空", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: 'warning',
+        }).then(() => {
+          // location.reload();
+        });
+        console.log("empty recipe !!!")
+        return false
+      }
       // 按照类型填充数据
       /**
        * {
